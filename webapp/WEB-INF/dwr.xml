@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN"
+    "http://getahead.org/dwr/dwr30.dtd">
+<dwr>
+  	<allow>
+	    	<!--将DWRMessagePush类的onPageLoad方法暴露出来-->
+	  	<create creator="new" javascript="messagePushDwr">
+			<param name="class" value="com.mfq.boss.dwr.DWRMessagePush" />
+			<!-- 指定执行方法 -->
+			<include method="onPageLoad"/>
+			<!-- 禁止执行方法 -->
+            <!-- <exclude method="test" /> -->
+	    </create>
+	    	<!-- 整合spring配置方式 -->
+	    	<create creator="spring" javascript="orderRepaymentDwr">
+				<param name="beanName" value="orderRepaymentService" />
+	    	</create>
+	    	<create creator="spring" javascript="debitDwr">
+				<param name="beanName" value="debitService" />
+	    	</create>
+	    	
+    		<!-- this is a bad idea for live, but can be useful in testing -->
+    		<!-- 测试阶段使用，运营阶段不要使用，异常处理-->
+    		<convert converter="exception" match="java.lang.Exception"/>
+    		<!-- convert元素用于数据类型转换，即java类和javascript之间相互转换，复杂对象的映射 -->
+		<convert converter="bean" match="java.lang.StackTraceElement"/>
+		<convert converter="bean" match="com.mfq.boss.model.user.UserAccountVO"/>
+		<convert converter="bean" match="com.mfq.boss.model.session.UserSession"/>
+		<convert converter="bean" match="com.mfq.boss.model.permission.UserVO"/>
+		<convert converter="bean" match="com.mfq.boss.model.repayment.DebitDTO"/>
+		
+		<filter class="com.mfq.boss.filter.DWRFilter"></filter>  
+  	</allow>
+
+</dwr>
